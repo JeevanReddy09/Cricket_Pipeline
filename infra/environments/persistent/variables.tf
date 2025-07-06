@@ -28,16 +28,4 @@ variable "account_id" {
 variable "display_name" {
   description = "The display name of the service account."
   type        = string
-}
-
-variable "dataproc_cluster_name" {
-  description = "The name of the Dataproc Spark cluster."
-  type        = string
-  default     = "spark-cluster"
-}
-
-variable "dataproc_zone" {
-  description = "The zone for the Dataproc cluster."
-  type        = string
-  default     = "us-central1-a"
-}
+} 
