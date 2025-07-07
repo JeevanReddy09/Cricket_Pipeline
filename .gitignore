@@ -1,1 +1,4 @@
 initial_test/
+local_cricsheet_data/
+*.py
+artifacts/
