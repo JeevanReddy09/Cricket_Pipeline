@@ -7,9 +7,13 @@ resource "google_dataproc_cluster" "spark_cluster" {
     # Software configuration
     software_config {
       image_version = var.image_version
-      optional_components = ["ZEPPELIN"]
+      optional_components = ["ZEPPELIN", "JUPYTER", "ANACONDA"]
     }
 
+    endpoint_config {
+      enable_http_port_access = true
+    }
+  
     # Master node configuration
     master_config {
       num_instances = 1

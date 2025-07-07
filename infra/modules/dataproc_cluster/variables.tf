@@ -27,7 +27,7 @@ variable "image_version" {
 variable "master_machine_type" {
   description = "The machine type for the master node."
   type        = string
-  default     = "n1-standard-2"
+  default     = "e2-standard-4"
 }
 
 variable "master_boot_disk_size_gb" {
@@ -45,7 +45,7 @@ variable "worker_count" {
 variable "worker_machine_type" {
   description = "The machine type for the worker nodes."
   type        = string
-  default     = "n1-standard-2"
+  default     = "e2-standard-4"
 }
 
 variable "worker_boot_disk_size_gb" {
