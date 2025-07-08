@@ -7,7 +7,7 @@ resource "google_dataproc_cluster" "spark_cluster" {
     # Software configuration
     software_config {
       image_version = var.image_version
-      optional_components = ["ZEPPELIN", "JUPYTER", "ANACONDA"]
+      optional_components = ["ZEPPELIN", "JUPYTER"]
     }
 
     endpoint_config {

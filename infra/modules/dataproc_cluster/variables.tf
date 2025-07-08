@@ -45,7 +45,7 @@ variable "worker_count" {
 variable "worker_machine_type" {
   description = "The machine type for the worker nodes."
   type        = string
-  default     = "e2-standard-4"
+  default     = "e2-standard-2"
 }
 
 variable "worker_boot_disk_size_gb" {
