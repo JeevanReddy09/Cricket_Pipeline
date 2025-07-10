@@ -48,8 +48,7 @@ with DAG(
                 "main_python_file_uri": PYSPARK_SCRIPT_PATH,
                 "args": [
                     f"gs://{RAW_BUCKET}/{config['input_folder']}/",
-                    f"gs://{PROCESSED_BUCKET}/cricsheet_data/",
-                    match_type
+                    f"gs://{PROCESSED_BUCKET}/cricsheet_data/"
                 ]
             },
         }
