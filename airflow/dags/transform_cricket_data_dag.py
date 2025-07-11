@@ -17,7 +17,7 @@ PROCESSED_BUCKET = "cricket-processed"
 CLUSTER_NAME = "cricket-spark-cluster" 
 PYSPARK_SCRIPT_PATH = f"gs://{RAW_BUCKET}/scripts/process_cricket_data.py"
 
-# --- Focused on T20 data only for this test run ---
+
 MATCH_TYPES = [
     {"type": "t20", "input_folder": "t20_json"},
     {"type": "odi", "input_folder": "odi_json"},

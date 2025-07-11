@@ -2,7 +2,7 @@
 
 import sys
 from pyspark.sql import SparkSession #type: ignore
-from pyspark.sql.functions import col, to_date #type: ignore
+from pyspark.sql.functions import col, to_date, when #type: ignore
 from pyspark.sql.types import StructType, StructField, StringType, ArrayType, LongType #type: ignore
 
 def run_spark_job(spark, input_path, output_path):
@@ -17,7 +17,9 @@ def run_spark_job(spark, input_path, output_path):
         StructField("gender", StringType(), True),
         StructField("match_type", StringType(), True),
         StructField("outcome", StructType([
-            StructField("winner", StringType(), True)
+            StructField("winner", StringType(), True),
+            StructField("win_by_runs", LongType(), True),
+            StructField("win_by_wickets", LongType(), True)
         ]), True),
         StructField("overs", StringType(), True),
         StructField("player_of_match", ArrayType(StringType()), True),
@@ -26,7 +28,8 @@ def run_spark_job(spark, input_path, output_path):
             StructField("decision", StringType(), True),
             StructField("winner", StringType(), True)
         ]), True),
-        StructField("venue", StringType(), True)
+        StructField("venue", StringType(), True),
+        StructField("event", StringType(), True)  
     ])
 
     raw_df = spark.read.schema(defined_schema).option("multiLine", "true").json(input_path)
@@ -38,13 +41,24 @@ def run_spark_job(spark, input_path, output_path):
         "gender",
         col("match_type").alias("match_type_detail"),
         col("outcome.winner").alias("winner"),
+        col("outcome.win_by_runs").alias("win_by_runs"),
+        col("outcome.win_by_wickets").alias("win_by_wickets"),
         "overs",
         col("player_of_match")[0].alias("player_of_match"),
         col("teams")[0].alias("team_1"),
         col("teams")[1].alias("team_2"),
         col("toss.decision").alias("toss_decision"),
         col("toss.winner").alias("toss_winner"),
-        "venue"
+        "venue",
+        col("event").alias("event_name")
+    )
+
+    # Add outcome_type column based on win_by_runs and win_by_wickets
+    final_df = final_df.withColumn(
+        "outcome_type",
+        when(col("win_by_runs").isNotNull(), "runs")
+        .when(col("win_by_wickets").isNotNull(), "wickets")
+        .otherwise(None)
     )
 
     # Convert match_date string to a proper DateType column
