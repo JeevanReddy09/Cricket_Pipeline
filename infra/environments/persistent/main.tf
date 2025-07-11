@@ -3,10 +3,19 @@ provider "google" {
   region  = var.region
 }
 
-module "gcs_bucket" {
+# Raw data bucket for incoming cricket data
+module "gcs_raw_bucket" {
   source          = "../../modules/gcs_bucket"
   project_id      = var.project_id
-  bucket_name     = var.gcs_bucket_name
+  bucket_name     = var.gcs_raw_bucket_name
+  location        = var.region
+}
+
+# Processed data bucket for Spark job output
+module "gcs_processed_bucket" {
+  source          = "../../modules/gcs_bucket"
+  project_id      = var.project_id
+  bucket_name     = var.gcs_processed_bucket_name
   location        = var.region
 }
 
@@ -23,4 +32,15 @@ module "service_account" {
   account_id   = var.account_id
   display_name = var.display_name
   project_id   = var.project_id
+}
+
+# External table for processed cricket match data (Parquet files from Spark job)
+module "cricket_matches_external_table" {
+  source     = "../../modules/bigquery_external_table"
+  depends_on = [module.bigquery_dataset, module.gcs_processed_bucket]
+
+  project_id  = var.project_id
+  dataset_id  = module.bigquery_dataset.id
+  table_id    = var.external_table_name
+  source_uris = var.external_table_source_uris
 } 
