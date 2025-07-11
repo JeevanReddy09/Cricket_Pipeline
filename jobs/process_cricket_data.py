@@ -18,6 +18,7 @@ def run_spark_job(spark, input_path, output_path):
         StructField("match_type", StringType(), True),
         StructField("outcome", StructType([
             StructField("winner", StringType(), True),
+            StructField("result", StringType(), True),
                 StructField("by", StructType([
                     StructField("runs", LongType(), True),
                     StructField("wickets", LongType(), True)
@@ -46,6 +47,7 @@ def run_spark_job(spark, input_path, output_path):
         "gender",
         "match_type",
         col("outcome.winner").alias("winner"),
+        col("outcome.result").alias("result"),
         col("outcome.by.runs").alias("win_by_runs"),
         col("outcome.by.wickets").alias("win_by_wickets"),
         "overs",
