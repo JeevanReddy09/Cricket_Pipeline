@@ -3,13 +3,13 @@
 WITH yearly_format_counts AS (
     SELECT
         EXTRACT(YEAR FROM match_date) AS match_year,
-        match_type_detail AS format,
+        match_type AS format,
         COUNT(*) AS matches_played
     FROM
         {{ ref('stg_cricket_matches') }}
     WHERE
         match_date IS NOT NULL
-        AND match_type_detail IS NOT NULL
+        AND match_type IS NOT NULL
     GROUP BY
         1, 2
 ),

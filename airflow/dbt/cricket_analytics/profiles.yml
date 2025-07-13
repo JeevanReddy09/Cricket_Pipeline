@@ -1,0 +1,15 @@
+cricket_analytics:
+  outputs:
+    dev:
+      dataset: cricket_data
+      job_execution_timeout_seconds: 300
+      job_retries: 1
+      keyfile: D:\Project\Project\airflow\google\credentials.json
+      location: US-central1
+      method: service-account
+      priority: interactive
+      project: cbpl-01
+      threads: 4
+      type: bigquery
+  target: dev
+

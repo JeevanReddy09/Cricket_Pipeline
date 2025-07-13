@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: cricket_raw
+    description: "Raw cricket match data from external tables"
+    schema: cricket_data
+    tables:
+      - name: matches
+        description: "Cricket match data with teams, venues, and outcomes"
+        
