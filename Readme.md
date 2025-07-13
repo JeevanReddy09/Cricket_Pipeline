@@ -19,5 +19,5 @@ Visualizes insights through interactive dashboards
 ## Architecture
 
 Cricsheet.org → Airflow → Spark/Dataproc → BigQuery → dbt → Looker Studio
-      ↓              ↓           ↓            ↓       ↓         ↓
-   Raw JSON    Orchestration  Processing   Storage  Analytics  Insights
+
+
