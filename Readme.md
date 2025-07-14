@@ -51,31 +51,32 @@ Terraform 1.0+
 
 Git for version control
 
-# Clone repository
-git clone https://github.com/yourusername/cricket-analytics.git
-cd cricket-analytics
+**Clone repository**
 
-# Set up GCP authentication
+git clone https://github.com/yourusername/cricket-analytics.git
+
+
+**Set up GCP authentication**
 gcloud auth application-default login
 export GOOGLE_APPLICATION_CREDENTIALS="path/to/service-account.json"
 
-# Deploy persistent infrastructure first
+**Deploy persistent infrastructure first**
 cd infra/environments/persistent
 terraform init
 terraform plan
 terraform apply
 
-# This creates:
-# - GCS buckets (cricket-raw, cricket-processed)
-# - BigQuery datasets
-# - External tables
-# - Service accounts and IAM roles
+ This creates:
+ - GCS buckets (cricket-raw, cricket-processed)
+ - BigQuery datasets
+ - External tables
+ - Service accounts and IAM roles
 
-# Create service account with required permissions
+**Create service account with required permissions**
 gcloud iam service-accounts create cricket-analytics-sa \
     --display-name="Cricket Analytics Service Account"
 
-# Grant necessary roles
+**Grant necessary roles**
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:cricket-analytics-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/bigquery.dataEditor"
@@ -88,15 +89,15 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:cricket-analytics-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/dataproc.editor"
 
-# Download service account key
+**Download service account key**
 gcloud iam service-accounts keys create credentials.json \
     --iam-account=cricket-analytics-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com
 
-# Move to appropriate directory
-# Docker-compose buiold creates a directory named google
+**Move to appropriate directory**
+#Docker-compose buiold creates a directory named google
 mv credentials.json airflow/google/
 
-## Required Airflow Variables Setup
+**Required Airflow Variables Setup**
 Navigate to Airflow UI → Admin → Variables and create the following:
 
 Variable Key		    Description
@@ -110,7 +111,7 @@ The pipeline is designed to run automatically from end to end.
 
 Initiate the Pipeline: Trigger the first DAG, raw_upload_to_gcs, from the Airflow UI at http://localhost:8080.
 
-## Automated Orchestration:
+**Automated Orchestration:**
 
 Upon successful completion, the raw_upload_to_gcs DAG will automatically trigger the transform_cricket_data_dag.
 
