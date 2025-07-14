@@ -21,8 +21,6 @@ An end-to-end data engineering pipeline for processing and analyzing cricket mat
   * [Step 7: Configure and Run Airflow](#step-7-configure-and-run-airflow)
 * [Running the Automated Pipeline](#running-the-automated-pipeline)
 * [Analytics and Visualization](#analytics-and-visualization)
-* [Contributing](#contributing)
-* [License](#license)
 
 ## Project Overview
 
@@ -161,7 +159,6 @@ mv credentials.json airflow/google/
 2. **Verify `docker-compose.yaml` mounts**:
 
    ```yaml
-   ```
 
 volumes:
 
