@@ -42,7 +42,13 @@ RUN --mount=type=cache,target=/home/airflow/.cache/pip \
         --constraint "${CONSTRAINT_URL}"
 
 #######################################################################
-# ── Optional: copy GCP credentials & expose default path ─────────── #
+# ── Install dbt separately to avoid constraints conflicts ──────────#
+#######################################################################
+RUN --mount=type=cache,target=/home/airflow/.cache/pip \
+    pip install --no-cache-dir dbt-core dbt-bigquery
+
+#######################################################################
+# ── copy GCP credentials & expose default path ─────────── #
 #######################################################################
 COPY ./google ${AIRFLOW_HOME}/google
 ENV GOOGLE_APPLICATION_CREDENTIALS=${AIRFLOW_HOME}/google/credentials.json

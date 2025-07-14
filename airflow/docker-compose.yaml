@@ -29,8 +29,7 @@ services:
           airflow db migrate && airflow connections create-default-connections &&
           airflow users create -r Admin -u admin -p admin -e admin@example.com -f admin -l airflow &&
           airflow users create -r Admin -u airflow -p airflow -e airflow@example.com -f airflow -l airflow &&
-          echo 'Initialization complete' &&
-          touch /opt/airflow/shared/initialized
+          echo 'Initialization complete'
           "
 
         healthcheck:
@@ -40,19 +39,9 @@ services:
             retries: 5
             start_period: 10s
 
-        volumes:
-        - ./shared-data:/opt/airflow/shared            
-
     scheduler:
         build: .
-        command: >
-            bash -c "
-            until [ -f /opt/airflow/shared/initialized ]; do
-                echo 'Waiting for init-airflow to complete...';
-                sleep 2;
-            done;
-            airflow scheduler
-            "
+        command: airflow scheduler
         depends_on:
             - postgres
             - init-airflow
@@ -73,18 +62,11 @@ services:
             - ./dags:/opt/airflow/dags
             - ./logs:/opt/airflow/logs
             - ./google:/opt/airflow/google:ro
-            - ./shared-data:/opt/airflow/shared
+            - ./dbt:/opt/airflow/dbt
 
     webserver:
         build: .
-        command: >
-            bash -c "
-            until [ -f /opt/airflow/shared/initialized ]; do
-                echo 'Waiting for init-airflow to complete...';
-                sleep 2;
-            done;
-            airflow webserver
-            "
+        command: airflow webserver
         depends_on:
             - postgres
             - init-airflow
@@ -106,7 +88,7 @@ services:
             - ./dags:/opt/airflow/dags
             - ./logs:/opt/airflow/logs
             - ./google:/opt/airflow/google:ro
-            - ./shared-data:/opt/airflow/shared            
+            - ./dbt:/opt/airflow/dbt
 
         user: "50000:0"
         ports:
