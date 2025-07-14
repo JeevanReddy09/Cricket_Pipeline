@@ -8,11 +8,12 @@ DBT_PROJECT_DIR = "/opt/airflow/dbt/cricket_analytics"
 
 
 with DAG(
-    dag_id="dbt_run_cricket_models",
+    dag_id="dbt_run_models",
     start_date=pendulum.datetime(2025, 7, 11, tz="UTC"),
-    schedule=None, # This DAG should be triggered by the other DAG
+    schedule=None, # This DAG is triggered by the spark_jobs_and_dbt_trigger DAG
     catchup=False,
-    tags=["cricsheet", "dbt"],
+    tags=["cricsheet", "dbt", "production"],
+    description="Runs dbt models on processed cricket data. Triggered by the transform cricket data DAG.",
 ) as dag:
     
     run_dbt_models = BashOperator(

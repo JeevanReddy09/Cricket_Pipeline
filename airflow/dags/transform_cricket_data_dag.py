@@ -9,6 +9,7 @@ from airflow.providers.google.cloud.operators.dataproc import ( # type: ignore
     DataprocSubmitJobOperator,
 )
 from airflow.operators.python import PythonOperator # type: ignore
+from airflow.operators.trigger_dagrun import TriggerDagRunOperator # type: ignore
 from google.cloud import storage
 
 # --- Configuration ---
@@ -55,12 +56,12 @@ def log_files_processed(match_type: str, input_path: str):
 
 # --- DAG Definition ---
 with DAG(
-    dag_id="automated_cricket_data_pipeline",
+    dag_id="spark_jobs_and_dbt_trigger",
     start_date=pendulum.datetime(2025, 7, 8, tz="UTC"),
     schedule=None,
     catchup=False,
     tags=["cricsheet", "dataproc", "spark", "production"],
-    description="Automates Dataproc cluster creation, runs Spark jobs, and deletes the cluster.",
+    description="Automates Dataproc cluster creation, runs Spark jobs, deletes the cluster, and triggers dbt models.",
 ) as dag:
 
     # 1. Create the Dataproc cluster
@@ -122,3 +123,15 @@ with DAG(
     # Set the final dependency: all logging tasks must finish before deleting the cluster
     for task in final_log_tasks:
         task >> delete_cluster
+
+    # 5. Trigger the dbt DAG after successful completion
+    trigger_dbt_dag = TriggerDagRunOperator(
+        task_id='trigger_dbt_run',
+        trigger_dag_id='dbt_run_models',
+        wait_for_completion=False,
+        poke_interval=60,
+        trigger_rule='all_success'
+    )
+    
+    # Delete cluster should complete before triggering dbt DAG
+    delete_cluster >> trigger_dbt_dag
