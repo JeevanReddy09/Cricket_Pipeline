@@ -57,10 +57,12 @@ git clone https://github.com/yourusername/cricket-analytics.git
 
 
 **Set up GCP authentication**
+
 gcloud auth application-default login
 export GOOGLE_APPLICATION_CREDENTIALS="path/to/service-account.json"
 
 **Deploy persistent infrastructure first**
+
 cd infra/environments/persistent
 terraform init
 terraform plan
@@ -73,10 +75,12 @@ terraform apply
  - Service accounts and IAM roles
 
 **Create service account with required permissions**
+
 gcloud iam service-accounts create cricket-analytics-sa \
     --display-name="Cricket Analytics Service Account"
 
 **Grant necessary roles**
+
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --member="serviceAccount:cricket-analytics-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/bigquery.dataEditor"
@@ -90,14 +94,17 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
     --role="roles/dataproc.editor"
 
 **Download service account key**
+
 gcloud iam service-accounts keys create credentials.json \
     --iam-account=cricket-analytics-sa@YOUR_PROJECT_ID.iam.gserviceaccount.com
 
 **Move to appropriate directory**
+
 #Docker-compose buiold creates a directory named google
 mv credentials.json airflow/google/
 
 **Required Airflow Variables Setup**
+
 Navigate to Airflow UI → Admin → Variables and create the following:
 
 Variable Key		    Description
