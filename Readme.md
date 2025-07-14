@@ -69,38 +69,31 @@ The pipeline follows a modern ELT pattern, with each stage managed by its own Ai
 ### Step 1: Create and Configure GCP Project
 
 1. **Create a new project** (replace `your-unique-project-id`):
-
-   ```bash
-   ```
-
+```bash
 gcloud projects create your-unique-project-id
+```
 
-````
 2. **Set the project**:
-   ```bash
+```bash
 gcloud config set project your-unique-project-id
-````
-
+```
 ### Step 2: Clone the Repository
 ```bash
 git clone https://github.com/yourusername/cricket-analytics.git
 cd cricket-analytics
-````
+```
 
 ### Step 3: Install Local Dependencies
-
 ```bash
 pip install dbt-bigquery
 ```
 
 ### Step 4: Configure GCP Authentication
-
 ```bash
 gcloud auth application-default login
 ```
 
 ### Step 5: Deploy Persistent Infrastructure
-
 ```bash
 cd infra/environments/persistent
 terraform init
@@ -115,16 +108,13 @@ This creates:
 * IAM service account for the pipeline
 
 ### Step 6: Grant Roles to the Service Account
-
 1. **Retrieve the service account email**:
-
-   ```bash
+```bash
 terraform output service\_account\_email
-````
-
+```
 
 2. **Grant roles** (replace `SA_EMAIL` and `YOUR_PROJECT_ID`):
-   ```bash
+```bash
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
   --member="serviceAccount:SA_EMAIL" \
   --role="roles/bigquery.dataEditor"
@@ -136,44 +126,42 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
   --member="serviceAccount:SA_EMAIL" \
   --role="roles/dataproc.editor"
-````
+```
 
 3. **Download service account key**:
-
-   ```bash
+```bash
 gcloud iam service-accounts keys create credentials.json&#x20;
 \--iam-account=SA\_EMAIL
-````
+```
 
 ### Step 7: Configure and Run Airflow
 1. **Move credentials**:
-   ```bash
+```bash
 mkdir -p airflow/google
 mv credentials.json airflow/google/
-````
+```
 
 2. **Verify `docker-compose.yaml` mounts**:
-
-   ```yaml
-
+```yaml
 volumes:
 
 * ./dags\:/opt/airflow/dags
 * ./logs\:/opt/airflow/logs
 * ../dbt:/opt/airflow/dbt
 * ./google:/opt/airflow/google
+```
 
-````
 3. **Set Airflow Variables** in the Airflow UI (`http://localhost:8080`):
    - `cricsheet_odi_etag`
    - `cricsheet_test_etag`
    - `cricsheet_t20_etag`
+   
 4. **Build and start Airflow**:
-   ```bash
+```bash
 cd airflow
 docker-compose build
 docker-compose up -d
-````
+```
 
 ## Running the Automated Pipeline
 
