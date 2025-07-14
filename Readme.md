@@ -119,11 +119,10 @@ This creates:
 1. **Retrieve the service account email**:
 
    ```bash
-   ```
-
 terraform output service\_account\_email
-
 ````
+
+
 2. **Grant roles** (replace `SA_EMAIL` and `YOUR_PROJECT_ID`):
    ```bash
 gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
@@ -142,11 +141,8 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
 3. **Download service account key**:
 
    ```bash
-   ```
-
 gcloud iam service-accounts keys create credentials.json&#x20;
 \--iam-account=SA\_EMAIL
-
 ````
 
 ### Step 7: Configure and Run Airflow
