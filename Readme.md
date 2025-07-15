@@ -36,7 +36,7 @@ The core objective is to transform raw, nested JSON data into clean, structured,
 
 The pipeline follows a modern ELT pattern, with each stage managed by its own Airflow DAG for modularity and resilience.
 
-![Architecture Diagram](D:\Project\Project\images\architecture.jpg)
+![Architecture Diagram](./images/architecture.jpg)
 
 ### Data Flow
 
